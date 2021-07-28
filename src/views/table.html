@@ -1,0 +1,281 @@
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary w-100">Tabla de <span class="text-capitalize" id="tableName"></span></h6>
+            <div class="d-flex flex-wrap justify-content-end">
+                <div type="button" class="btn btn-success" data-toggle="modal" data-target="#createEntryModal">
+                    Entrada
+                </div>
+                <div type="button" class="btn btn-info" data-toggle="modal" data-target="#createColumnModal">
+                    Columnas
+                </div>
+                <div type="button" class="btn btn-primary" data-toggle="modal" data-target="#createRelatedsModal">
+                    Funciones
+                </div>
+                <div type="button" class="btn btn-warning btnBlock" data-toggle="modal" data-target="#modifyModal" onclick="modifyElements()">
+                    Modificar
+                </div>
+                <div type="button" class="btn btn-danger btnBlock d-flex">
+                    <div class="dropdown align-self-center">
+                        <div class="dropdown-toggle text-capitalize" type="button" id="deleteButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Eliminar
+                        </div>
+                        <div class="dropdown-menu" aria-labelledby="deleteButton" style="position: absolute; will-change: transform; top: 0px; left: 0px;width:200px" x-placement="bottom-start">
+                            <div class="row justify-content-center">
+                                <div class="align-self-center text-center">Seguro que desea eliminarlo?</div>
+                                <button type="submit" class="btn btn-danger p-0 mt-1 w-75" onclick="fastDELETE()">
+                                    <span class="text">CONFIRMAR</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.container-fluid -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="createEntryModal" tabindex="-1" aria-labelledby="createEntryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createEntryModalLabel">Crear Entrada</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createEntryForm">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="sendStandardRequest('createEntryForm')">Crear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="createRelatedsModal" tabindex="-1" aria-labelledby="createRelatedsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div>
+                <button type="button" class="close mx-3 mt-1" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-header pt-0">
+                <h5 class="modal-title">FUNCIONES DE RELACIONES</h5>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <h5 class="modal-title">FUNCIONES</h5>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <code class="mx-4 text-nowrap">Separadores: "()"</code>
+                        <code class="mx-4 text-nowrap">Suma: "+"</code>
+                        <code class="mx-4 text-nowrap">Resta: "-"</code>
+                        <code class="mx-4 text-nowrap">Multiplicación: "*"</code>
+                        <code class="mx-4 text-nowrap">División: "/"</code>
+                        <code class="mx-4 text-nowrap">Aumento %: "+%"</code>
+                        <code class="mx-4 text-nowrap">Descuento %: "-%"</code>
+                        <code class="mx-4 text-nowrap">Porcentaje: "%"</code>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="modal-title">RELACIONES</h5>
+                    <div class="d-flex flex-wrap justify-content-center" id="functionIndex"></div>
+                </div>
+                <div class="d-flex">
+                    <h5 class="modal-title">Dudas?</h5>
+                    <div class="dropdown align-self-center">
+                        <div class="d-flex" type="button" id="helpButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <i class="fa fa-info-circle my-auto mx-2 fs-5" aria-hidden="true"></i>
+                        </div>
+                        <div class="dropdown-menu" aria-labelledby="helpButton" style="position: absolute;top: 0px; left: 0px" x-placement="bottom-start">
+                            <div class="mx-2">
+                                <p>
+                                    El siguiente ejemplo realiza un aumento del 21% a la diferencia entre la columna '{0}' por 0.5 y la columna '{1}':
+                                </p>
+                                <code class="text-nowrap text-center">
+                                    ( ( {0} * 0.5 ) - {1} ) +% 21
+                                </code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form id="createRelatedsForm">
+                    <input type="hidden" name="objtype" value="rel">
+                    <div class="form-group mx-5 mt-4">
+                        <label class="text-capitalize">Función:</label>
+                        <textarea type="text" name="function" class="form-control w-100 px-1 fs-6" style="resize:none" required></textarea>
+                    </div>
+                    <div class="form-group mx-5 d-flex">
+                        <label class="text-capitalize align-self-center m-0">Nombre:</label>
+                        <input type="text" name="name" class="form-control w-75 mx-auto" id="funNameInput" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="sendStandardRequest('createRelatedsForm')">Aplicar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="createColumnModal" tabindex="-1" aria-labelledby="createColumnModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div>
+                <button type="button" class="close mx-3 mt-1" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-7">
+                    <div class="modal-header pt-0">
+                        <h5 class="modal-title" id="createColumnModalLabel">Creación</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createColumnForm">
+                            <input type="hidden" name="objtype" value="col">
+                            <div class="form-group">
+                                <label for="colNameInput" class="text-capitalize">Nombre de la Columna</label>
+                                <input type="text" name="name" class="form-control" id="colNameInput">
+                            </div>
+                            <div class="form-group">
+                                <label for="selectcreateColumnForm" class="text-capitalize">Insertar a la derecha
+                                    de:</label>
+                                <select class="custom-select custom-select-md text-capitalize" name="afterof"
+                                    id="selectcreateColumnForm">
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" onclick="sendStandardRequest('createColumnForm')">Crear</button>
+                    </div>
+                </div>
+                <div class="col-12 col-md-5">
+                    <div class="modal-header pt-0">
+                        <h5 class="modal-title">Eliminación</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form id="deleteColumnForm">
+                            <div class="form-check ms-4">
+                                <input type="checkbox" class="form-check-input" name="full" value="full"
+                                    id="deleteColumnCheckTable">
+                                <label class="form-check-label" for="deleteColumnCheckTable"><strong><code>TABLA</code></strong></label>
+                            </div>
+                            <div class="form-check ms-4">
+                                <input type="checkbox" class="form-check-input" id="deleteColumnCheckItemFull">
+                                <label class="form-check-label" for="deleteColumnCheckItemFull"><strong>TODO</strong></label>
+                            </div>
+                            <div class="ms-4" id="deleteColumnCheckBoxCol"></div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" onclick="sendStandardRequest('deleteColumnForm')">ELIMINAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+    <div class="modal-dialog" id="modifyModalDialog">
+        <div class="modal-content" id="modifyContentALL">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modifyModalLabel">Modificar Todas las Entrada</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body row">
+                <div class="col-12 col-md-6">
+                    <small style="font-weight: bold;font-style: italic;color: #e83e8c;">
+                        <p>Los espacios no rellenados, no serán modificados.</p>
+                    </small>
+                    <form id="modifyCheckedForm" class="fureyForm">
+                    </form>
+                </div>
+                <div class="col-12 col-md-6">
+                    <small style="font-weight: bold;font-style: italic;color: #e83e8c;">
+                        <p>Modificar una columna usando una función:</p>
+                    </small>
+                    <form id="modifyCheckedFormFUN" class="fureyForm">
+                        <input type="hidden" name="target" value="fun">
+                        <div class="form-group">
+                            <div class="align-self-center">
+                                Aplicar sobre la columna:
+                            </div>
+                            <select class="custom-select custom-select-md text-capitalize" name="col[]" id="selectModifyForm">
+                            </select>
+                        </div>
+                        <div class="form-group d-flex">
+                            <div class="align-self-center me-auto">
+                                Operación:
+                            </div>
+                            <select class="custom-select custom-select-md text-capitalize w-50" name="operation" style="width: 200px;">
+                                <option value="sum">Suma +</option>
+                                <option value="min">Resta -</option>
+                                <option value="up">Suba +%</option>
+                                <option value="down">Baja -%</option>
+                                <option value="percent">Porcentaje %</option> 
+                            </select>
+                        </div>
+                        <div class="form-group d-flex">
+                            <div class="align-self-center me-auto">
+                                Cantidad:
+                            </div>
+                            <input type="text" name="cantidad" class="form-control m-0 w-50" placeholder="75.7">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" onclick="sendStandardRequest('modifyCheckedForm');sendStandardRequest('modifyCheckedFormFUN')">Modificar Todo</button>
+            </div>
+        </div>
+        <div class="modal-content" id="modifyContentONE">
+            <div class="modal-header">
+                <h5 class="modal-title">Modificar Entrada</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="modifyForm"></form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-warning" onclick="sendStandardRequest('modifyForm')">Modificar</button>
+            </div>
+        </div>
+    </div>
+</div>

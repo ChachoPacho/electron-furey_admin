@@ -1,0 +1,26 @@
+.selected_tr {
+    color: #3a3b45;
+    background-color: #dde2f1;
+}
+
+.brother_selected_tr td {
+    border-bottom-color: #004113;
+}
+
+.selected_tr td {
+    border-color: #004113;
+}
+
+.fieldName {
+    color: #858796;
+    border: none;
+    font-weight: 700;
+}
+
+.fieldName:scope {
+    border: none;
+}
+
+.table td, .table th {
+    padding: .5rem;
+}
